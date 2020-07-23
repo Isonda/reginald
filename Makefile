@@ -2,7 +2,7 @@ DOCKER_TAG ?= reggie
 
 .PHONY: run
 run: build
-	docker run -d --name $(DOCKER_TAG) $(DOCKER_TAG)
+	docker run -d --restart always --name $(DOCKER_TAG) $(DOCKER_TAG)
 
 .PHONY: run-dev
 run-dev: build
