@@ -3,6 +3,7 @@ import sys
 import logging
 import datetime
 import random
+import urllib
 import discord
 
 from log_handler import get_logger
@@ -111,6 +112,10 @@ async def eight_ball(ctx):
         "You may rely on it.",
     ]))
 
+
+@bot.command(name="qrcode", help="Create a qr code with inputted string")
+async def qrcode(ctx, *, data):
+    await ctx.send(f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={urllib.parse.quote(data)}")
 
 
 @bot.command(name="test", help="Test command for sandboxing new features (requires admin)")
