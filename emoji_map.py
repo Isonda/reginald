@@ -39,7 +39,7 @@ EMOJI_MAP = {
     "9": [":nine:"],
     "0": [":zero:"],
     "?": [":grey_question:", ":question:"],
-    "!": [":grey_exclamation:", ":exclamation:"],
+    "!": [":grey_exclamation:", ":exclamation:", ":bangbang:"],
     "*": [":asterisk:"],
     "#": [":hash:"]
 }
