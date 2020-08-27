@@ -8,6 +8,7 @@ import discord
 
 from brain import incr_user_count
 from brain import get_user_count
+from emoji_map import emojify_it
 
 from log_handler import get_logger
 from discord.ext import commands
@@ -121,6 +122,11 @@ async def eight_ball(ctx):
 @bot.command(name="qrcode", help="Create a qr code with inputted string")
 async def qrcode(ctx, *, data):
     await ctx.send(f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={urllib.parse.quote(data)}")
+
+
+@bot.command(name="emojify", help="Emojify a string of text")
+async def emojify(ctx, *, data):
+    await ctx.send(await emojify_it(data))
 
 
 @bot.command(name="test", help="Test command for sandboxing new features (requires admin)")
