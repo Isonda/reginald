@@ -6,6 +6,9 @@ import random
 import urllib
 import discord
 
+from brain import incr_user_count
+from brain import get_user_count
+
 from log_handler import get_logger
 from discord.ext import commands
 
@@ -34,6 +37,8 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
         return
+
+    await incr_user_count(message.author.id)
 
     if "lemon" in message.content.lower():
         await message.add_reaction("🍋")
