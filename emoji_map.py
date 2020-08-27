@@ -16,7 +16,7 @@ EMOJI_MAP = {
     "l": [":regional_indicator_l:"],
     "m": [":m:", ":part_alternation_mark:", ":scorpius:", ":regional_indicator_m:"],
     "n": [":regional_indicator_n:"],
-    "o": [":o2:", ":yin_yang:", ":globe_with_meridians:", ":regional_indicator_o:"],
+    "o": [":o2:", ":yin_yang:", ":globe_with_meridians:", ":regional_indicator_o:", ":cyclone:"],
     "p": [":parking:", ":regional_indicator_p:"],
     "q": [":regional_indicator_q:"],
     "r": [":regional_indicator_r:"],
@@ -25,9 +25,9 @@ EMOJI_MAP = {
     "u": [":regional_indicator_u:"],
     "v": [":aries:", ":regional_indicator_v:"],
     "w": [":regional_indicator_w:"],
-    "x": [":x:", ":regional_indicator_x:"],
+    "x": [":x:", ":regional_indicator_x:", ":negative_squared_cross_mark:"],
     "y": [":regional_indicator_y:"],
-    "z": [":regional_indicator_z:"],
+    "z": [":regional_indicator_z:", ":zzz:"],
     "1": [":one:"],
     "2": [":two:"],
     "3": [":three:"],
@@ -39,7 +39,9 @@ EMOJI_MAP = {
     "9": [":nine:"],
     "0": [":zero:"],
     "?": [":grey_question:", ":question:"],
-    "!": [":grey_exclamation:", ":exclamation:"]
+    "!": [":grey_exclamation:", ":exclamation:"],
+    "*": [":asterisk:"],
+    "#": [":hash:"]
 }
 
 async def emojify_it(data):
