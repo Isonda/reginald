@@ -5,7 +5,7 @@ client = firestore.Client()
 users = client.collection("discord")
 
 
-async def incr_user_count(user_id: int) -> bool:
+async def incr_user_count(user_id: int, username: str) -> bool:
     """ Return False if new user
     """
     existing_user = users.document(str(user_id))
@@ -15,7 +15,8 @@ async def incr_user_count(user_id: int) -> bool:
         existing_user.set(existing_object)
         return True
     existing_user.set({
-        "msgs": 0
+        "msgs": 1,
+        "username": username
     })  
     return False
 

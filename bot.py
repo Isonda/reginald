@@ -57,7 +57,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    await incr_user_count(message.author.id)
+    await incr_user_count(message.author.id, message.author.name)
 
     all_url_matches = [i.group() for i in re.finditer(PATTERN, message.content)]
     if all_url_matches:
