@@ -1,10 +1,14 @@
 import os
+import re
 import sys
 import logging
 import datetime
 import random
 import urllib
 import discord
+import requests
+
+from bs4 import BeautifulSoup
 
 from brain import incr_user_count
 from brain import get_user_count
@@ -16,6 +20,18 @@ from discord.ext import commands
 start_time = datetime.datetime.today()
 logger = get_logger(__name__)
 bot = commands.Bot(command_prefix=".")
+PATTERN = r"(http|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
+
+
+async def grab_url_meta(url: str) -> str:
+    """ Return the title tag from a web page
+    """
+    resp = requests.get(url, headers={"User-Agent": "Reginald, The Llama Butler :)"})
+    if not resp.ok:
+        logger.error(f"Non-200 response => {resp.text}")
+        return ""
+    soup = BeautifulSoup(resp.text, features="html.parser")
+    return soup.title.string
 
 
 async def is_admin(ctx):
@@ -40,6 +56,13 @@ async def on_message(message):
         return
 
     await incr_user_count(message.author.id)
+
+    all_url_matches = [i.group() for i in re.finditer(PATTERN, message.content)]
+    if all_url_matches:
+        for url in all_url_matches:
+            url_title = await grab_url_meta(url)
+            msg = f"[ {url_title} ]"
+            await message.channel.send(msg)
 
     if "lemon" in message.content.lower():
         await message.add_reaction("🍋")
