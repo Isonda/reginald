@@ -52,6 +52,8 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
+    emoji_map = {i.name: i.id for i in bot.emojis}
+
     if message.author == bot.user:
         return
 
@@ -88,11 +90,46 @@ async def on_message(message):
     if "ian" in message.content.lower():
         await message.add_reaction("🌱")
 
+    if "lol" in message.content.lower():
+        await message.add_reaction(
+            bot.get_emoji(
+                emoji_map.get(
+                    random.choice(
+                        ["kek", "loaf", "cough_cat", "peppette", "bill"]
+                    )
+                )
+            )
+        )
+
+    if "what" in message.content.lower():
+        await message.add_reaction(
+            bot.get_emoji(
+                emoji_map.get("nani")
+            )
+        )
+
+    if "wow" in message.content.lower():
+        await message.add_reaction(
+            bot.get_emoji(
+                emoji_map.get(
+                    random.choice(
+                        ["morikawa_woah", "woah"]
+                    )
+                )
+            )
+        )
+
     if "subscribe" in message.content.lower():
-        await message.add_reaction("🆗")
-        await message.add_reaction("🆒")
-        await message.add_reaction("🆙")
-        await message.add_reaction("🧚")
+        await message.add_reaction(
+            bot.get_emoji(
+                emoji_map.get("peppette")
+            )
+        )
+        await message.add_reaction(
+            bot.get_emoji(
+                emoji_map.get("cough_cat")
+            )
+        )
 
     if message.content.lower().startswith("do i have a second?"):
         await message.channel.send("Second!")
