@@ -65,6 +65,9 @@ async def on_message(message):
     if "ian" in message.content.lower():
         await message.add_reaction("🌱")
 
+    if message.content.lower().startswith("do i have a second?"):
+        await message.channel.send("Second!")
+
     await bot.process_commands(message)
 
 
