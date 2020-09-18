@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 
 from brain import incr_user_count
 from brain import get_user_count
+from brain import check_rank
 from emoji_map import emojify_it
 
 from log_handler import get_logger
@@ -21,6 +22,19 @@ start_time = datetime.datetime.today()
 logger = get_logger(__name__)
 bot = commands.Bot(command_prefix=".")
 PATTERN = r"(http|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
+
+
+# async def extract_user_id(data: str) -> str:
+#     """ Input a suspected user id message to validate
+#     """
+#     if not data.startswith("<@!") or not data.endswith(">"):
+#         return ""
+#     valid = data.strip("<@!>")
+#     try:
+#         int(valid)
+#         return valid
+#     except ValueError:
+#         return ""
 
 
 async def grab_url_meta(url: str) -> str:
@@ -198,12 +212,22 @@ async def emojify(ctx, *, data):
     await ctx.send(await emojify_it(data))
 
 
+@bot.command(name="rank", help="Get rank")
+async def rank(ctx):
+    looked_up_user = bot.get_user(ctx.author.id)
+    user_rank = await check_rank(looked_up_user.name)
+
+    if not user_rank:
+        await ctx.send("User not found")
+        return
+    await ctx.send(f"You are ranked #{user_rank}")
+
+
 @bot.command(name="test", help="Test command for sandboxing new features (requires admin)")
 @commands.check(is_admin)
-async def test(ctx):
-    logger.info(ctx.author.id)
-    user = bot.get_user(ctx.author.id)
-    await user.send("📡")
+async def test(ctx, data: str = None):
+    if data:
+        await ctx.message.add_reaction("🍋")
     await ctx.message.add_reaction("📡")
 
 
