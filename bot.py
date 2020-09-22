@@ -41,9 +41,7 @@ async def is_admin(ctx):
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(
-        activity=discord.Activity(name="Llamas", type=discord.ActivityType.watching)
-    )
+    await bot.change_presence(activity=discord.Activity(name="Llamas", type=discord.ActivityType.watching))
     logger.info(f"Connected as {bot.user}")
 
 
@@ -82,21 +80,13 @@ async def on_message(message):
         await message.add_reaction("🌱")
 
     if "lol" in message.content.lower():
-        await message.add_reaction(
-            bot.get_emoji(
-                emoji_map.get(
-                    random.choice(["kek", "loaf", "cough_cat", "peppette", "bill"])
-                )
-            )
-        )
+        await message.add_reaction(bot.get_emoji(emoji_map.get(random.choice(["kek", "loaf", "cough_cat", "peppette", "bill"]))))
 
     if "what" in message.content.lower():
         await message.add_reaction(bot.get_emoji(emoji_map.get("nani")))
 
     if "wow" in message.content.lower():
-        await message.add_reaction(
-            bot.get_emoji(emoji_map.get(random.choice(["morikawa_woah", "woah"])))
-        )
+        await message.add_reaction(bot.get_emoji(emoji_map.get(random.choice(["morikawa_woah", "woah"]))))
 
     if "unit" in message.content.lower():
         await message.add_reaction(bot.get_emoji(emoji_map.get("cheems")))
@@ -118,14 +108,7 @@ async def dice(ctx, num_of_dice: int = 2):
         return
 
     available_emojis = {i.name: i.id for i in bot.emojis}
-    available_dice = {
-        "diceone": 1,
-        "dicetwo": 2,
-        "dicethree": 3,
-        "dicefour": 4,
-        "dicefive": 5,
-        "dicesix": 6,
-    }
+    available_dice = {"diceone": 1, "dicetwo": 2, "dicethree": 3, "dicefour": 4, "dicefive": 5, "dicesix": 6}
     all_selected_dice = []
     total = 0
     for i in range(int(num_of_dice)):
@@ -194,9 +177,7 @@ async def eight_ball(ctx):
 
 @bot.command(name="qrcode", help="Create a qr code with inputted string")
 async def qrcode(ctx, *, data):
-    await ctx.send(
-        f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={urllib.parse.quote(data)}"
-    )
+    await ctx.send(f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={urllib.parse.quote(data)}")
 
 
 @bot.command(name="emojify", help="Emojify a string of text")
@@ -215,9 +196,7 @@ async def rank(ctx):
     await ctx.send(f"You are ranked #{user_rank}")
 
 
-@bot.command(
-    name="test", help="Test command for sandboxing new features (requires admin)"
-)
+@bot.command(name="test", help="Test command for sandboxing new features (requires admin)")
 @commands.check(is_admin)
 async def test(ctx, data: str = None):
     if data:

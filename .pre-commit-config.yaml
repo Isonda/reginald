@@ -1,0 +1,14 @@
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-json
+      - id: check-yaml
+      - id: flake8
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+-   repo: https://github.com/psf/black
+    rev: 19.3b0
+    hooks:
+    -   id: black
+        language_version: python3.7
+        args: [--target-version, py37, --line-length, '131']

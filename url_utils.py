@@ -7,9 +7,7 @@ from log_handler import get_logger
 
 logger = get_logger(__name__)
 
-PATTERN = (
-    r"(http|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
-)
+PATTERN = r"(http|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
 
 
 async def _grab_url_meta(url: str) -> str:
