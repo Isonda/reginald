@@ -1,17 +1,11 @@
 import os
-import re
 import sys
-import logging
 import datetime
 import random
 import urllib
 import discord
-import requests
-
-# from bs4 import BeautifulSoup
 
 from brain import incr_user_count
-from brain import get_user_count
 from brain import check_rank
 from emoji_map import emojify_it
 from url_utils import url_match
@@ -22,7 +16,6 @@ from discord.ext import commands
 start_time = datetime.datetime.today()
 logger = get_logger(__name__)
 bot = commands.Bot(command_prefix=".")
-# PATTERN = r"(http|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
 
 
 # async def extract_user_id(data: str) -> str:
@@ -36,8 +29,6 @@ bot = commands.Bot(command_prefix=".")
 #         return valid
 #     except ValueError:
 #         return ""
-
-
 
 
 async def is_admin(ctx):
@@ -94,49 +85,25 @@ async def on_message(message):
         await message.add_reaction(
             bot.get_emoji(
                 emoji_map.get(
-                    random.choice(
-                        ["kek", "loaf", "cough_cat", "peppette", "bill"]
-                    )
+                    random.choice(["kek", "loaf", "cough_cat", "peppette", "bill"])
                 )
             )
         )
 
     if "what" in message.content.lower():
-        await message.add_reaction(
-            bot.get_emoji(
-                emoji_map.get("nani")
-            )
-        )
+        await message.add_reaction(bot.get_emoji(emoji_map.get("nani")))
 
     if "wow" in message.content.lower():
         await message.add_reaction(
-            bot.get_emoji(
-                emoji_map.get(
-                    random.choice(
-                        ["morikawa_woah", "woah"]
-                    )
-                )
-            )
+            bot.get_emoji(emoji_map.get(random.choice(["morikawa_woah", "woah"])))
         )
 
     if "unit" in message.content.lower():
-        await message.add_reaction(
-            bot.get_emoji(
-                emoji_map.get("cheems")
-            )
-        )
+        await message.add_reaction(bot.get_emoji(emoji_map.get("cheems")))
 
     if "subscribe" in message.content.lower():
-        await message.add_reaction(
-            bot.get_emoji(
-                emoji_map.get("peppette")
-            )
-        )
-        await message.add_reaction(
-            bot.get_emoji(
-                emoji_map.get("cough_cat")
-            )
-        )
+        await message.add_reaction(bot.get_emoji(emoji_map.get("peppette")))
+        await message.add_reaction(bot.get_emoji(emoji_map.get("cough_cat")))
 
     if message.content.lower().startswith("do i have a second?"):
         await message.channel.send("Second!")
@@ -151,7 +118,14 @@ async def dice(ctx, num_of_dice: int = 2):
         return
 
     available_emojis = {i.name: i.id for i in bot.emojis}
-    available_dice = {"diceone": 1, "dicetwo": 2, "dicethree": 3, "dicefour": 4, "dicefive": 5, "dicesix":6}
+    available_dice = {
+        "diceone": 1,
+        "dicetwo": 2,
+        "dicethree": 3,
+        "dicefour": 4,
+        "dicefive": 5,
+        "dicesix": 6,
+    }
     all_selected_dice = []
     total = 0
     for i in range(int(num_of_dice)):
@@ -190,33 +164,39 @@ async def clear(ctx):
 
 @bot.command(name="8ball", help="Ask the 8 ball a question")
 async def eight_ball(ctx):
-    await ctx.send(random.choice([
-        "As I see it, yes.",
-        "Ask again later.",
-        "Better not tell you now.",
-        "Cannot predict now.",
-        "Concentrate and ask again.",
-        "Don’t count on it.",
-        "It is certain.",
-        "It is decidedly so.",
-        "Most likely.",
-        "My reply is no.",
-        "My sources say no.",
-        "Outlook not so good.",
-        "Outlook good.",
-        "Reply hazy, try again.",
-        "Signs point to yes.",
-        "Very doubtful.",
-        "Without a doubt.",
-        "Yes.",
-        "Yes – definitely.",
-        "You may rely on it.",
-    ]))
+    await ctx.send(
+        random.choice(
+            [
+                "As I see it, yes.",
+                "Ask again later.",
+                "Better not tell you now.",
+                "Cannot predict now.",
+                "Concentrate and ask again.",
+                "Don’t count on it.",
+                "It is certain.",
+                "It is decidedly so.",
+                "Most likely.",
+                "My reply is no.",
+                "My sources say no.",
+                "Outlook not so good.",
+                "Outlook good.",
+                "Reply hazy, try again.",
+                "Signs point to yes.",
+                "Very doubtful.",
+                "Without a doubt.",
+                "Yes.",
+                "Yes – definitely.",
+                "You may rely on it.",
+            ]
+        )
+    )
 
 
 @bot.command(name="qrcode", help="Create a qr code with inputted string")
 async def qrcode(ctx, *, data):
-    await ctx.send(f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={urllib.parse.quote(data)}")
+    await ctx.send(
+        f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={urllib.parse.quote(data)}"
+    )
 
 
 @bot.command(name="emojify", help="Emojify a string of text")
@@ -235,7 +215,9 @@ async def rank(ctx):
     await ctx.send(f"You are ranked #{user_rank}")
 
 
-@bot.command(name="test", help="Test command for sandboxing new features (requires admin)")
+@bot.command(
+    name="test", help="Test command for sandboxing new features (requires admin)"
+)
 @commands.check(is_admin)
 async def test(ctx, data: str = None):
     if data:

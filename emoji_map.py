@@ -16,7 +16,13 @@ EMOJI_MAP = {
     "l": [":regional_indicator_l:"],
     "m": [":m:", ":part_alternation_mark:", ":scorpius:", ":regional_indicator_m:"],
     "n": [":regional_indicator_n:"],
-    "o": [":o2:", ":yin_yang:", ":globe_with_meridians:", ":regional_indicator_o:", ":cyclone:"],
+    "o": [
+        ":o2:",
+        ":yin_yang:",
+        ":globe_with_meridians:",
+        ":regional_indicator_o:",
+        ":cyclone:",
+    ],
     "p": [":parking:", ":regional_indicator_p:"],
     "q": [":regional_indicator_q:"],
     "r": [":regional_indicator_r:"],
@@ -41,12 +47,9 @@ EMOJI_MAP = {
     "?": [":grey_question:", ":question:"],
     "!": [":grey_exclamation:", ":exclamation:", ":bangbang:"],
     "*": [":asterisk:"],
-    "#": [":hash:"]
+    "#": [":hash:"],
 }
 
+
 async def emojify_it(data):
-    return "".join(
-        [choice(EMOJI_MAP.get(i.lower(), " ")) for i in data]
-        )
-
-
+    return "".join([choice(EMOJI_MAP.get(i.lower(), " ")) for i in data])

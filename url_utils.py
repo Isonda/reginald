@@ -1,7 +1,15 @@
 import re
+import requests
 from bs4 import BeautifulSoup
 
-PATTERN = r"(http|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
+from log_handler import get_logger
+
+
+logger = get_logger(__name__)
+
+PATTERN = (
+    r"(http|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
+)
 
 
 async def _grab_url_meta(url: str) -> str:
