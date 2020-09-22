@@ -6,6 +6,7 @@ import urllib
 import discord
 
 from brain import incr_user_count
+from brain import incr_channel_tally
 from brain import check_rank
 from emoji_map import emojify_it
 from url_utils import url_match
@@ -53,6 +54,7 @@ async def on_message(message):
         return
 
     await incr_user_count(message.author.id, message.author.name)
+    await incr_channel_tally(message.channel.id, message.channel.name)
     await url_match(message)
 
     if "lemon" in message.content.lower():
