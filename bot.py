@@ -8,6 +8,8 @@ import discord
 from brain import incr_user_count
 from brain import incr_channel_tally
 from brain import check_rank
+from brain import set_ambush
+from brain import detect_ambush
 from emoji_map import emojify_it
 from url_utils import url_match
 
@@ -19,17 +21,16 @@ logger = get_logger(__name__)
 bot = commands.Bot(command_prefix=".")
 
 
-# async def extract_user_id(data: str) -> str:
-#     """ Input a suspected user id message to validate
-#     """
-#     if not data.startswith("<@!") or not data.endswith(">"):
-#         return ""
-#     valid = data.strip("<@!>")
-#     try:
-#         int(valid)
-#         return valid
-#     except ValueError:
-#         return ""
+async def extract_user_id(data: str) -> int:
+    """ Input a suspected user id message to validate
+    """
+    if not data.startswith("<@!") or not data.endswith(">"):
+        return 0
+    valid = data.strip("<@!>")
+    try:
+        return int(valid)
+    except ValueError:
+        return 0
 
 
 async def is_admin(ctx):
@@ -55,6 +56,7 @@ async def on_message(message):
 
     await incr_user_count(message.author.id, message.author.name)
     await incr_channel_tally(message.channel.id, message.channel.name)
+    await detect_ambush(message)
     await url_match(message)
 
     if "lemon" in message.content.lower():
@@ -198,9 +200,35 @@ async def rank(ctx):
     await ctx.send(f"You are ranked #{user_rank}")
 
 
+@bot.command(
+    name="ambush",
+    help="Set ambush for a user with a message next time they are seen. Usage: .ambush @user message to send to them",
+)
+async def ambush(ctx, user, *, msg):
+
+    if not user or not msg:
+        await ctx.send("What do you want?")
+        return
+
+    user_id = await extract_user_id(user)
+    if not user_id:
+        await ctx.send("I don't know who that is...")
+        return
+
+    user_obj = bot.get_user(user_id)
+    if user_obj.name == ctx.message.author.name:
+        await ctx.send("Cannot ambush yourself, idiot!")
+        return
+
+    await set_ambush(user_obj, msg, ctx.message.author.name)
+    await ctx.message.add_reaction("✅")
+
+
 @bot.command(name="test", help="Test command for sandboxing new features (requires admin)")
 @commands.check(is_admin)
 async def test(ctx, data: str = None):
+    logger.info(f"Sender => {ctx.message.author.name}")
+    logger.info(f"Message => {ctx.message.content}")
     if data:
         await ctx.message.add_reaction("🍋")
     await ctx.message.add_reaction("📡")
