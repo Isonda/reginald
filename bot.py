@@ -133,6 +133,13 @@ async def on_message(message):
             )
         )
 
+    if "unit" in message.content.lower():
+        await message.add_reaction(
+            bot.get_emoji(
+                emoji_map.get("cheems")
+            )
+        )
+
     if "subscribe" in message.content.lower():
         await message.add_reaction(
             bot.get_emoji(
