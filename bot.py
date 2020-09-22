@@ -151,6 +151,25 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
+@bot.command(name="dice", help="Roll between 1 and 5 dice")
+async def dice(ctx, num_of_dice: int = 2):
+    if int(num_of_dice) > 5:
+        await ctx.message.add_reaction("⛔")
+        return
+
+    available_emojis = {i.name: i.id for i in bot.emojis}
+    available_dice = {"diceone": 1, "dicetwo": 2, "dicethree": 3, "dicefour": 4, "dicefive": 5, "dicesix":6}
+    all_selected_dice = []
+    total = 0
+    for i in range(int(num_of_dice)):
+        selected_dice_name = random.choice(list(available_dice.keys()))
+        total += available_dice.get(selected_dice_name)
+        selected_dice_id = available_emojis.get(selected_dice_name)
+        all_selected_dice.append(f"<:{selected_dice_name}:{selected_dice_id}>")
+    message = " ".join(all_selected_dice)
+    await ctx.send(f"{message}")
+
+
 @bot.command(name="uptime", help="Find out how long this bot has been up for.")
 async def uptime(ctx):
     now = datetime.datetime.today()
