@@ -1,3 +1,7 @@
+import datetime
+
+from uuid import uuid4
+
 from google.cloud import firestore
 from log_handler import get_logger
 
@@ -6,6 +10,21 @@ client = firestore.Client()
 users = client.collection("discord")
 channel_tally = client.collection("tally")
 ambush_memory = client.collection("ambush_memory")
+dice_bag = client.collection("dice_bag")
+
+
+async def add_dice_to_bag(username: str, channel_id: str, dice: list):
+    sum_o_dice, count_o_dice = sum(dice), len(dice)
+    dice_doc = dice_bag.document(uuid4().hex)
+    payload = {
+        "username": username,
+        "dice": dice,
+        "sum": sum_o_dice,
+        "count": count_o_dice,
+        "channel_id": channel_id,
+        "epoch": datetime.datetime.today().strftime("%s"),
+    }
+    dice_doc.set(payload)
 
 
 async def set_ambush(user_object, message: str, sender: str) -> bool:

@@ -11,6 +11,7 @@ from brain import incr_channel_tally
 from brain import check_rank
 from brain import set_ambush
 from brain import detect_ambush
+from brain import add_dice_to_bag
 from emoji_map import emojify_it
 from url_utils import url_match
 
@@ -114,14 +115,14 @@ async def dice(ctx, num_of_dice: int = 2):
 
     available_emojis = {i.name: i.id for i in bot.emojis}
     available_dice = {"diceone": 1, "dicetwo": 2, "dicethree": 3, "dicefour": 4, "dicefive": 5, "dicesix": 6}
-    all_selected_dice = []
-    total = 0
+    all_selected_dice, all_selected_dice_numeric = [], []
     for i in range(int(num_of_dice)):
         selected_dice_name = random.choice(list(available_dice.keys()))
-        total += available_dice.get(selected_dice_name)
+        all_selected_dice_numeric.append(available_dice.get(selected_dice_name))
         selected_dice_id = available_emojis.get(selected_dice_name)
         all_selected_dice.append(f"<:{selected_dice_name}:{selected_dice_id}>")
     message = " ".join(all_selected_dice)
+    await add_dice_to_bag(ctx.message.author.name, ctx.channel.id, all_selected_dice_numeric)
     await ctx.send(f"{message}")
 
 
