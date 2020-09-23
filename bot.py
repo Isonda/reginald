@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import datetime
 import random
 import urllib
@@ -222,6 +223,21 @@ async def ambush(ctx, user, *, msg):
 
     await set_ambush(user_obj, msg, ctx.message.author.name)
     await ctx.message.add_reaction("✅")
+
+
+@bot.command(name="jerkit")
+async def jerkit(ctx):
+    await ctx.message.delete()
+    jerk = ["8✊====D", "8=✊===D", "8==✊==D", "8===✊=D", "8====✊D", "8===✊=D", "8==✊==D", "8=✊===D", "8✊====D"]
+    new_message = await ctx.send("8✊====D")
+    chan = bot.get_channel(ctx.channel.id)
+    msg = await chan.fetch_message(new_message.id)
+
+    for dick in jerk * 2:
+        time.sleep(0.25)
+        await msg.edit(content=dick)
+    await msg.delete()
+    # Delete message
 
 
 @bot.command(name="test", help="Test command for sandboxing new features (requires admin)")
