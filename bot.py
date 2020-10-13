@@ -181,7 +181,9 @@ async def eight_ball(ctx):
         "Yes – definitely.",
         "You may rely on it.",
     ]
-    eight_ball_embed = discord.Embed(title=random.choice(eight_ball_responses), color=discord.Color.gold())
+    eight_ball_embed = discord.Embed(title="8 Ball", color=discord.Color.gold())
+    eight_ball_embed.set_thumbnail(url="https://storage.googleapis.com/bin-chickin-emojis/eight_ball.png")
+    eight_ball_embed.add_field(name="Prediction", value=random.choice(eight_ball_responses))
     await ctx.send(embed=eight_ball_embed)
 
 
