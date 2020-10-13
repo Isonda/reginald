@@ -130,8 +130,14 @@ async def dice(ctx, num_of_dice: int = 2):
 async def uptime(ctx):
     now = datetime.datetime.today()
     td = now - start_time
-    await ctx.message.add_reaction("🦙")
-    await ctx.send(f"I've been up for {td.days} days, thats {td.seconds} seconds total")
+
+    embed_obj = discord.Embed(
+        title="Uptime Report", description="I have been connected to Discord servers for...", color=discord.Color.purple()
+    )
+    embed_obj.add_field(name="Days", value=td.days)
+    embed_obj.add_field(name="Hours", value=round(td.total_seconds() / 3600, 2), inline=True)
+    embed_obj.add_field(name="Seconds", value=round(td.total_seconds(), 2), inline=True)
+    await ctx.send(embed=embed_obj)
 
 
 @bot.command(name="ping", help="pong")
