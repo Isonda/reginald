@@ -12,7 +12,6 @@ from brain import detect_ambush
 from brain import add_dice_to_bag
 from brain import Bank
 from emoji_map import emojify_it
-from url_utils import url_match
 
 from log_handler import get_logger
 from discord.ext import commands
@@ -74,7 +73,6 @@ async def on_message(message):
 
     await Bank.increment_credits(message)
     await detect_ambush(message)
-    await url_match(message)
 
     if "lemon" in message.content.lower():
         await message.add_reaction("🍋")
