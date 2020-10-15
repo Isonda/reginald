@@ -6,12 +6,14 @@ import random
 import urllib
 import discord
 
-from brain import incr_user_count
-from brain import incr_channel_tally
+from uuid import uuid4
+
 from brain import check_rank
 from brain import set_ambush
 from brain import detect_ambush
 from brain import add_dice_to_bag
+from brain import DicePit
+from brain import Bank
 from emoji_map import emojify_it
 from url_utils import url_match
 
@@ -43,6 +45,23 @@ async def is_admin(ctx):
     return ctx.author.id == 259441441389019137
 
 
+async def over_under_game(reaction, user):
+    if reaction.message.embeds:
+        message_embed = reaction.message.embeds[0]
+        try:
+            parsed_game_footer = message_embed.footer.text.split(":")
+            game_id_text, game_id = parsed_game_footer[0].strip().lower(), parsed_game_footer[1].strip()
+            logger.info(parsed_game_footer)
+            logger.info(game_id_text)
+            logger.info(game_id)
+        except Exception as e:
+            logger.error(e)
+            return
+
+        if game_id_text == "game id":
+            print(reaction.emoji)
+
+
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Activity(name="Llamas", type=discord.ActivityType.watching))
@@ -56,8 +75,10 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    await incr_user_count(message.author.id, message.author.name)
-    await incr_channel_tally(message.channel.id, message.channel.name)
+    # print(message.author.avatar_url)
+    await Bank.increment_credits(message)
+    # await incr_user_count(message.author.id, message.author.name)
+    # await incr_channel_tally(message.channel.id, message.channel.name)
     await detect_ambush(message)
     await url_match(message)
 
@@ -105,6 +126,18 @@ async def on_message(message):
         await message.channel.send("Second!")
 
     await bot.process_commands(message)
+
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    """ Docs => https://discordpy.readthedocs.io/en/latest/api.html?highlight=on_reaction_add#discord.on_reaction_add
+
+        For now, this is a listener for under/over reactions.
+    """
+    if user == bot.user:
+        return
+
+    await over_under_game(reaction, user)  # Send off to go work
 
 
 @bot.command(name="dice", help="Roll between 1 and 5 dice")
@@ -255,6 +288,57 @@ async def test(ctx, data: str = None):
     if data:
         await ctx.message.add_reaction("🍋")
     await ctx.message.add_reaction("📡")
+
+
+@bot.command(name="ou")
+async def overunder(ctx):
+    """ Start a game of Over/Under
+    """
+    game_id = uuid4().hex
+    chan = bot.get_channel(ctx.channel.id)
+    available_emojis = {i.name: i.id for i in bot.emojis}
+    available_dice = {"diceone": 1, "dicetwo": 2, "dicethree": 3, "dicefour": 4, "dicefive": 5, "dicesix": 6}
+    d1, d2 = random.choice(list(available_dice.keys())), random.choice(list(available_dice.keys()))
+    dice_one = {"name": d1, "value": available_dice.get(d1), "emoji_id": available_emojis.get(d1)}
+
+    dice_two = {"name": d2, "value": available_dice.get(d2), "emoji_id": available_emojis.get(d2)}
+    logger.info(dice_one)
+    logger.info(dice_two)
+
+    dice_sum = sum([i.get("value") for i in [dice_one, dice_two]])
+    logger.info(f"Dice Sum => {dice_sum}")
+    dice_game_obj = {"game_id": game_id, "roll": dice_sum, "bettors": {}}
+    bot_response = f"<:{dice_one.get('name')}:{dice_one.get('emoji_id')}> <:{dice_two.get('name')}:{dice_two.get('emoji_id')}>"
+    game_embed = discord.Embed(
+        title="Over/Under", description="Will the next dice roll be over or under this roll?", color=discord.Color.gold()
+    )
+    game_embed.set_thumbnail(url="https://storage.googleapis.com/bin-chickin-emojis/poker_chip_blue.png")
+    game_embed.set_footer(text=f"Game ID: {game_id}")
+    game_embed.add_field(name="Dice One", value=f"{dice_one.get('value')}")
+    game_embed.add_field(name="Dice Two", value=f"{dice_two.get('value')}", inline=True)
+    game_embed.add_field(name="Total", value=dice_sum, inline=True)
+
+    game_message = await ctx.send(bot_response, embed=game_embed)
+    dice_game_obj.update({"message_id": game_message.id})
+    await DicePit.set_new_game(dice_game_obj)
+    logger.info(f"Game Message ID => {game_message.id} Game ID => {game_id}")
+    game_message = await chan.fetch_message(game_message.id)
+    await game_message.add_reaction("⬆")
+    await game_message.add_reaction("⬇")
+
+
+@bot.command(name="bal")
+async def balance(ctx):
+    """ Get your current credits
+    """
+    print(ctx.message.author.avatar_url)
+    user_purse = await Bank.get_balance(ctx.message.author.id)
+    balance_embed = discord.Embed(title="Vault Balance", color=discord.Color.green())
+    balance_embed.set_thumbnail(url="https://storage.googleapis.com/bin-chickin-emojis/credits.png")
+    balance_embed.set_author(name=ctx.message.author.name, url=ctx.message.author.avatar_url)
+    balance_embed.add_field(name="Llama Credits", value=user_purse.get("balance"))
+
+    await ctx.send(embed=balance_embed)
 
 
 if __name__ == "__main__":

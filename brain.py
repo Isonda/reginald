@@ -1,3 +1,4 @@
+import random
 import datetime
 
 from uuid import uuid4
@@ -11,6 +12,8 @@ users = client.collection("discord")
 channel_tally = client.collection("tally")
 ambush_memory = client.collection("ambush_memory")
 dice_bag = client.collection("dice_bag")
+dice_pit = client.collection("dice_pit")
+bank_vault = client.collection("bank")
 
 
 async def add_dice_to_bag(username: str, channel_id: str, dice: list):
@@ -50,19 +53,6 @@ async def detect_ambush(message):
         ambushee.delete()
 
 
-async def incr_user_count(user_id: int, username: str) -> bool:
-    """ Return False if new user
-    """
-    existing_user = users.document(str(user_id))
-    if existing_user.get().exists:
-        existing_object = existing_user.get().to_dict()
-        existing_object["msgs"] += 1
-        existing_user.set(existing_object)
-        return True
-    existing_user.set({"msgs": 1, "username": username})
-    return False
-
-
 async def get_user_count(user_id: int) -> dict:
     existing_user = users.document(str(user_id)).get()
     return existing_user.to_dict()
@@ -80,16 +70,55 @@ async def check_rank(username: str) -> int:
     return 0
 
 
-async def incr_channel_tally(channel_id: int, channel_name: str) -> bool:
-    """ Increment channel tally
+class DicePit:
+    async def existing_game() -> bool:
+        """ Return if there is a current game in sessions
+        """
+        existing_game = dice_pit.document("game")
+        return existing_game.get().exists
 
-        Return False if new channel record
-    """
-    channel = channel_tally.document(str(channel_id))
-    if channel.get().exists:
-        channel_stats = channel.get().to_dict()
-        channel_stats["msgs"] += 1
-        channel.set(channel_stats)
-        return True
-    channel.set({"channel_name": channel_name, "msgs": 1})
-    return False
+    async def set_new_game(game_obj: dict) -> bool:
+        """ Initialize a new game
+        """
+        game_id = game_obj.get("game_id")
+        new_game = dice_pit.document(game_id)
+        new_game.set(game_obj)
+
+    async def get_game_obj(game_id: str) -> dict:
+        """
+        """
+        pass
+
+    async def add_bet_to_game(game_id: str, user_id: str):
+        """
+        """
+        pass
+
+
+class Bank:
+    async def increment_credits(message) -> bool:
+        """ Increment credits for the given user
+
+            :param: message - discord.Message object
+
+            Return False if new record
+        """
+        total = 1 if message.attachments else 0
+        credits_awarded = round(random.uniform(0.1, 0.3), 2)
+        total += credits_awarded
+
+        user_purse = bank_vault.document(str(message.author.id))
+        if user_purse.get().exists:
+            user_purse_dict = user_purse.get().to_dict()
+            user_purse_dict["balance"] += round(total, 2)
+            user_purse_dict["balance"] = round(user_purse_dict["balance"], 2)
+            user_purse.set(user_purse_dict)
+            return True
+        user_purse.set({"username": message.author.name, "balance": round(total)})
+        return False
+
+    async def get_balance(user_id: int) -> dict:
+        """ Get and return a user_purse
+        """
+        user_purse = bank_vault.document(str(user_id))
+        return user_purse.get().to_dict()
