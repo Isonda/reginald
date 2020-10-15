@@ -323,12 +323,17 @@ async def test(ctx, data: str = None):
 async def balance(ctx):
     """ Get your current credits
     """
-    print(ctx.message.author.avatar_url)
+    total_credits = await Bank.get_total_credits_in_circulation()
     user_purse = await Bank.get_balance(ctx.message.author.id)
-    balance_embed = discord.Embed(title="Vault Balance", color=discord.Color.green())
+    percent_of_total = round((user_purse.get("balance") / total_credits) * 100, 2)
+
+    balance_embed = discord.Embed(
+        title="Vault Balance", color=discord.Color.green(), description="The total number of `Llama Credits` you have."
+    )
     balance_embed.set_thumbnail(url="https://storage.googleapis.com/bin-chickin-emojis/credits.png")
     balance_embed.set_author(name=ctx.message.author.name, url=ctx.message.author.avatar_url)
     balance_embed.add_field(name="Llama Credits", value=user_purse.get("balance"))
+    balance_embed.add_field(name="Percent of Total Circulation", value=f"{percent_of_total}%", inline=False)
 
     await ctx.send(embed=balance_embed)
 

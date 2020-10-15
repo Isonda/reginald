@@ -122,3 +122,8 @@ class Bank:
         """
         user_purse = bank_vault.document(str(user_id))
         return user_purse.get().to_dict()
+
+    async def get_total_credits_in_circulation() -> int:
+        """ Get the total value of all credits that have been earned
+        """
+        return sum([i.to_dict().get("balance") for i in bank_vault.stream()])
