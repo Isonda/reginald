@@ -30,29 +30,6 @@ async def add_dice_to_bag(username: str, channel_id: str, dice: list):
     dice_doc.set(payload)
 
 
-async def set_ambush(user_object, message: str, sender: str) -> bool:
-    """ Set an ambush for a user
-
-        :param: user_object -> Instance of discord.user.User object
-        :parma: message -> The message to ambush with
-    """
-    ambush_instance = ambush_memory.document(str(user_object.id))
-    ambush_instance.set({"sender": sender, "username": user_object.name, "msg": message})
-    return True
-
-
-async def detect_ambush(message):
-    """ Search for ambush, send it, remove the ambush
-
-        :param: message -> Instance of discord message object
-    """
-    ambushee = ambush_memory.document(str(message.author.id))
-    if ambushee.get().exists:
-        payload = ambushee.get().to_dict()
-        await message.channel.send(f"{payload.get('sender')} said: {payload.get('msg')}")
-        ambushee.delete()
-
-
 async def get_user_count(user_id: int) -> dict:
     existing_user = users.document(str(user_id)).get()
     return existing_user.to_dict()

@@ -6,8 +6,6 @@ import random
 import urllib
 import discord
 
-from brain import set_ambush
-from brain import detect_ambush
 from brain import add_dice_to_bag
 from brain import Bank
 from emoji_map import emojify_it
@@ -71,7 +69,6 @@ async def on_message(message):
         return
 
     await Bank.increment_credits(message)
-    await detect_ambush(message)
 
     if "lemon" in message.content.lower():
         await message.add_reaction("🍋")
@@ -219,30 +216,6 @@ async def qrcode(ctx, *, data):
 @bot.command(name="emojify", help="Emojify a string of text")
 async def emojify(ctx, *, data):
     await ctx.send(await emojify_it(data))
-
-
-@bot.command(
-    name="ambush",
-    help="Set ambush for a user with a message next time they are seen. Usage: .ambush @user message to send to them",
-)
-async def ambush(ctx, user, *, msg):
-
-    if not user or not msg:
-        await ctx.send("What do you want?")
-        return
-
-    user_id = await extract_user_id(user)
-    if not user_id:
-        await ctx.send("I don't know who that is...")
-        return
-
-    user_obj = bot.get_user(user_id)
-    if user_obj.name == ctx.message.author.name:
-        await ctx.send("Cannot ambush yourself, idiot!")
-        return
-
-    await set_ambush(user_obj, msg, ctx.message.author.name)
-    await ctx.message.add_reaction("✅")
 
 
 @bot.command(name="jerkit")
