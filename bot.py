@@ -6,7 +6,6 @@ import random
 import urllib
 import discord
 
-from brain import check_rank
 from brain import set_ambush
 from brain import detect_ambush
 from brain import add_dice_to_bag
@@ -220,17 +219,6 @@ async def qrcode(ctx, *, data):
 @bot.command(name="emojify", help="Emojify a string of text")
 async def emojify(ctx, *, data):
     await ctx.send(await emojify_it(data))
-
-
-@bot.command(name="rank", help="Get rank")
-async def rank(ctx):
-    looked_up_user = bot.get_user(ctx.author.id)
-    user_rank = await check_rank(looked_up_user.name)
-
-    if not user_rank:
-        await ctx.send("User not found")
-        return
-    await ctx.send(f"You are ranked #{user_rank}")
 
 
 @bot.command(

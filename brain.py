@@ -58,18 +58,6 @@ async def get_user_count(user_id: int) -> dict:
     return existing_user.to_dict()
 
 
-async def check_rank(username: str) -> int:
-    """ Return the numeric rank of the user
-    """
-    query = users.order_by("msgs", direction=firestore.Query.DESCENDING)
-    results = [i.to_dict() for i in query.stream()]
-    sorted_results = sorted(results, key=lambda x: x.get("msgs"), reverse=True)
-    for i, v in enumerate(sorted_results, start=1):
-        if v.get("username") == username:
-            return i
-    return 0
-
-
 class DicePit:
     async def existing_game() -> bool:
         """ Return if there is a current game in sessions
