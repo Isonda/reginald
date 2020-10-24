@@ -8,9 +8,6 @@ from log_handler import get_logger
 
 logger = get_logger(__name__)
 client = firestore.Client()
-users = client.collection("discord")
-channel_tally = client.collection("tally")
-ambush_memory = client.collection("ambush_memory")
 dice_bag = client.collection("dice_bag")
 dice_pit = client.collection("dice_pit")
 bank_vault = client.collection("bank")
@@ -28,11 +25,6 @@ async def add_dice_to_bag(username: str, channel_id: str, dice: list):
         "epoch": datetime.datetime.today().strftime("%s"),
     }
     dice_doc.set(payload)
-
-
-async def get_user_count(user_id: int) -> dict:
-    existing_user = users.document(str(user_id)).get()
-    return existing_user.to_dict()
 
 
 class DicePit:
