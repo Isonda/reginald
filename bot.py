@@ -9,6 +9,8 @@ import discord
 from brain import add_dice_to_bag
 from brain import Bank
 from emoji_map import emojify_it
+from redis_actions import update_last_seen
+from redis_actions import get_last_seen
 
 from log_handler import get_logger
 from discord.ext import commands
@@ -69,6 +71,7 @@ async def on_message(message):
         return
 
     await Bank.increment_credits(message)
+    await update_last_seen(message.author.id)
 
     if "lemon" in message.content.lower():
         await message.add_reaction("🍋")
@@ -237,6 +240,7 @@ async def jerkit(ctx):
 @commands.check(is_admin)
 async def test(ctx, data: str = None):
     logger.info(f"Sender => {ctx.message.author.name}")
+    logger.info(f"Sender => {ctx.message.author.display_name}")
     logger.info(f"Message => {ctx.message.content}")
     if data:
         await ctx.message.add_reaction("🍋")
@@ -299,7 +303,23 @@ async def balance(ctx):
     await ctx.send(embed=balance_embed)
 
 
+@bot.command(name="seen")
+async def seen(ctx, user):
+    user_id = await extract_user_id(user)
+    if not user_id:
+        await ctx.message.add_reaction("⛔")
+        return
+
+    user = await bot.fetch_user(int(user_id))
+    last_seen = await get_last_seen(user_id)
+    if not last_seen:
+        await ctx.message.add_reaction("⛔")
+        return
+    await ctx.reply(f"{user.display_name} was last seen: {last_seen.decode()}")
+
+
 if __name__ == "__main__":
+    logger.info(f"Running discord.py version => {discord.__version__}")
     token = os.environ.get("API_KEY")
     if not token:
         sys.exit(1)
