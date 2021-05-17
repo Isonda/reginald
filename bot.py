@@ -184,7 +184,6 @@ async def clear(ctx):
 @bot.command(name="8ball", help="Ask the 8 ball a question")
 async def eight_ball(ctx):
     eight_ball_responses = [
-        
         # Yes responses.
         "Yes, but you're still an ape.",
         "The good Lord hath deemed it so.",
