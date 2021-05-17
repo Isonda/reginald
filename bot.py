@@ -172,9 +172,7 @@ async def clear(ctx):
 @bot.command(name="8ball", help="Ask the 8 ball a question")
 async def eight_ball(ctx):
     eight_ball_responses = [
-        
         # The Virgin default responses.
-        
         "As I see it, yes.",
         "Ask again later.",
         "Better not tell you now.",
@@ -195,9 +193,7 @@ async def eight_ball(ctx):
         "Yes.",
         "Yes – definitely.",
         "You may rely on it.",
-        
         # The Giga-Chad big dick responses.
-        
         "No, you're an ape.",
         "Yes, but you're still an ape.",
         "This request is beneath me.",
