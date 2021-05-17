@@ -172,13 +172,11 @@ async def clear(ctx):
 @bot.command(name="8ball", help="Ask the 8 ball a question")
 async def eight_ball(ctx):
     eight_ball_responses = [
-        # Yes responses.
         "Yes, but you're still an ape.",
         "The good Lord hath deemed it so.",
         "Yes, yes, harder Daddy!",
         "<@!259459332171628544> didn't waste an hour making these stupid responses to tell you no, so...Yeah sure.",
         "All variables point to Yes.",
-        # The Virgin default responses.
         "As I see it, yes.",
         "It is certain.",
         "It is decidedly so.",
@@ -190,7 +188,6 @@ async def eight_ball(ctx):
         "Yes – definitely.",
         "You may rely on it.",
         "Yes. You had a 1/45 chance of landing this response. You could've used that luck to win a bet, ask a girl out, get a job, instead you wasted it here. Congrats.",
-        # The Giga-Chad big dick responses.
         "No, you're an ape.",
         "Hell naw nigga!",
         "No, you are mentally ill.",
@@ -207,7 +204,6 @@ async def eight_ball(ctx):
         "I love telling you No. Ask me again, I dare you.",
         "No! Did you think I was just here to confirm your bias you piece of shit?  What do you think this is, a server full of like minded individuals!?",
         "No. You had a 1/45 chance of landing this response. I think God hates you.",
-        # Neutral responses.
         ":ape:",
         "This request is beneath me.",
         "You can't handle The Truth.",
