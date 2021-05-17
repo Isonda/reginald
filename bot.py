@@ -184,6 +184,9 @@ async def clear(ctx):
 @bot.command(name="8ball", help="Ask the 8 ball a question")
 async def eight_ball(ctx):
     eight_ball_responses = [
+        
+        # The Virgin default responses.
+        
         "As I see it, yes.",
         "Ask again later.",
         "Better not tell you now.",
@@ -204,6 +207,21 @@ async def eight_ball(ctx):
         "Yes.",
         "Yes – definitely.",
         "You may rely on it.",
+        
+        # The Giga-Chad big dick responses.
+        
+        "No, you're an ape.",
+        "Yes, but you're still an ape.",
+        "This request is beneath me.",
+        "The good Lord hath deemed it so.",
+        "Hell naw nigga!",
+        "You can't handle The Truth.",
+        "Yes, yes, harder Daddy!",
+        "No, you are mentally ill.",
+        "Ah-ah-aaah, you didn't say the magic word.",
+        "<@!259459332171628544> didn't waste 10 minutes making these stupid responses to tell you no, so the answer is yes.",
+        "Statistical analysis would assume <@!737360033423163392> is making this query, so no, fuck you, and stop wasting my time.",
+        "The amount of time you waste on this app is disturbing.  Please re-evaluate your life choices.",
     ]
     eight_ball_embed = discord.Embed(title="8 Ball", color=discord.Color.gold())
     eight_ball_embed.set_thumbnail(url="https://storage.googleapis.com/bin-chickin-emojis/eight_ball.png")
