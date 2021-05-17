@@ -193,7 +193,7 @@ async def eight_ball(ctx):
         # The Giga-Chad big dick responses.
         "No, you're an ape.",
         "Hell naw nigga!",
-        "No, you are mentally ill.",        
+        "No, you are mentally ill.",
         "Statistical analysis predicts <@!737360033423163392> has issued this query, so no, fuck you, and stop wasting my time.",
         ":doubt:",
         "Don’t count on it.",
@@ -223,7 +223,7 @@ async def eight_ball(ctx):
         "Don't know, fun fact though, your word usage on this server is being tracked!  Have a nice day!",
         "The 8Ball is currently on their Union mandated Smoke Break.  Please try again in 15 minutes.",
         "The official stance of the CCP is not to answer the inquiry of dissidents.  Please remain where you are and a Party Official will be there shortly to educate you.",
-        "You had a 1/45 chance of landing this response, and I ain't tellin you shit.  Go fuck yourself."
+        "You had a 1/45 chance of landing this response, and I ain't tellin you shit.  Go fuck yourself.",
     ]
     eight_ball_embed = discord.Embed(title="8 Ball", color=discord.Color.gold())
     eight_ball_embed.set_thumbnail(url="https://storage.googleapis.com/bin-chickin-emojis/eight_ball.png")
